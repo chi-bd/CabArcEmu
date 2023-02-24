@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Cab">
+	<PropertyGroup>
+		<ExtensionTasksPath>C:\Program Files\MSBuildExtensionPack\4.0\</ExtensionTasksPath>
+	</PropertyGroup>
+
+  <!-- https://github.com/mikefourie-zz/MSBuildExtensionPack/ -->
+	<Import Project="$(ExtensionTasksPath)MSBuild.ExtensionPack.tasks" />
+
+	<!-- https://stackoverflow.com/a/38208732 -->
+	<ItemGroup>
+		<TXTFile Include="Test\*.txt" />
+		<TXTFile Remove="Test\2*.txt" />
+  </ItemGroup>
+
+	<!-- https://documentation.help/MSBuild.ExtensionPack/f7724cf2-0498-92d8-ba0f-26ca4772d8ee.htm -->
+	<Target Name="Cab">
+		<MSBuild.ExtensionPack.Compression.Cab TaskAction="Create"
+			FilesToCab="@(TXTFile)" CabFile="txt.cab" CabExePath="bin\Debug\CabArc.exe" />
+	</Target>
+	<Target Name="Cab2">
+		<MSBuild.ExtensionPack.Compression.Cab TaskAction="Create"
+			PathToCab="Test\" CabFile="txt2.cab" CabExePath="bin\Debug\CabArc.exe" />
+	</Target>
+</Project>
+<!-- for TEST
+>msbuild CabTest.proj -Target:Cab;Cab2
+-->
