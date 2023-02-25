@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Cab">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Cab;Cab2">
 	<PropertyGroup>
 		<ExtensionTasksPath>C:\Program Files\MSBuildExtensionPack\4.0\</ExtensionTasksPath>
 	</PropertyGroup>

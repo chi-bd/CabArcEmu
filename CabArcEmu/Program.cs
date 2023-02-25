@@ -58,7 +58,7 @@ namespace CabArcEmu
             int rc = -1;
             try
             {
-                File.WriteAllText(ddfFile, ddf.ToString());
+                File.WriteAllText(ddfFile, ddf.ToString(), Encoding.Default);
 
                 var pi = new ProcessStartInfo()
                 {
@@ -78,7 +78,9 @@ namespace CabArcEmu
             }
             finally
             {
+#if !DEBUG
                 File.Delete(ddfFile);
+#endif
             }
 
             return rc;
