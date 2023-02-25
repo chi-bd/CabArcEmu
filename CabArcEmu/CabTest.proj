@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Cab;Cab2">
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" DefaultTargets="Test1;Test2;Test3">
 	<PropertyGroup>
 		<ExtensionTasksPath>C:\Program Files\MSBuildExtensionPack\4.0\</ExtensionTasksPath>
+    <CabExePath>bin\Debug\CabArc.exe</CabExePath>
 	</PropertyGroup>
 
   <!-- https://github.com/mikefourie-zz/MSBuildExtensionPack/ -->
@@ -14,13 +15,17 @@
   </ItemGroup>
 
 	<!-- https://documentation.help/MSBuild.ExtensionPack/f7724cf2-0498-92d8-ba0f-26ca4772d8ee.htm -->
-	<Target Name="Cab">
+	<Target Name="Test1">
 		<MSBuild.ExtensionPack.Compression.Cab TaskAction="Create"
-			FilesToCab="@(TXTFile)" CabFile="txt.cab" CabExePath="bin\Debug\CabArc.exe" />
+			FilesToCab="@(TXTFile)" CabFile="txt.cab" CabExePath="$(CabExePath)" />
 	</Target>
-	<Target Name="Cab2">
+	<Target Name="Test2">
 		<MSBuild.ExtensionPack.Compression.Cab TaskAction="Create"
-			PathToCab="Test\" CabFile="txt2.cab" CabExePath="bin\Debug\CabArc.exe" />
+			PathToCab="Test\" CabFile="txt2.cab" CabExePath="$(CabExePath)" />
+	</Target>
+	<Target Name="Test3">
+		<MSBuild.ExtensionPack.Compression.Cab TaskAction="Create"
+			PathToCab="Test\" Recursive="true" CabFile="txt3.cab" CabExePath="$(CabExePath)" />
 	</Target>
 </Project>
 <!-- for TEST

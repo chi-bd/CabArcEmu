@@ -10,9 +10,20 @@ namespace CabArcEmu
     {
         static int Main(string[] args)
         {
-            if (args.Length < 3 || args[0] != "N") return 1;
+            var arguments = args;
 
-            var cabFile = args[1];
+            var option = SearchOption.TopDirectoryOnly;
+            if (args.Length > 0 && args[0] == "-r")
+            {
+                option = SearchOption.AllDirectories;
+
+                arguments = new string[args.Length - 1];
+                Array.Copy(args, 1, arguments, 0, arguments.Length);
+            }
+
+            if (arguments.Length < 3 || arguments[0] != "N") return 1;
+
+            var cabFile = arguments[1];
 
             // http://kiokunohokanko.blogspot.com/2015/07/windowsmakecab-cab-microsoft-makecab.html
             var ddf = new StringBuilder($@".Set Compress=on
@@ -28,13 +39,12 @@ namespace CabArcEmu
 .Set RptFileName=NUL
 ");
 
-            var arguments = args;
             int start = 2, step = 1;
 
-            if (args.Length == 3 && args[2].EndsWith("\\*"))
+            if (arguments.Length == 3 && arguments[2].EndsWith("\\*"))
             {
                 // all files in folder
-                arguments = Directory.GetFiles(Path.GetDirectoryName(args[2]), "*");
+                arguments = Directory.GetFiles(Path.GetDirectoryName(arguments[2]), "*", option);
                 start = 0;
             }
             else
