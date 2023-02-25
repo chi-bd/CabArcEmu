@@ -33,11 +33,11 @@ namespace CabArcEmu
 .Set MaxCabinetSize=0
 .Set MaxDiskFileCount=0
 .Set MaxDiskSize=0
-.Set DiskDirectoryTemplate={Path.GetDirectoryName(cabFile)}
-.Set CabinetNameTemplate={Path.GetFileName(cabFile)}
 .Set InfFileName=NUL
 .Set RptFileName=NUL
 ");
+            ddf.AppendLine($".Set DiskDirectoryTemplate=\"{Path.GetDirectoryName(cabFile)}\"");
+            ddf.AppendLine($".Set CabinetNameTemplate=\"{Path.GetFileName(cabFile)}\"");
 
             int start = 2, step = 1;
 
@@ -61,7 +61,7 @@ namespace CabArcEmu
 
             for (int i = start; i < arguments.Length; i += step)
             {
-                ddf.AppendLine(arguments[i]);
+                ddf.Append('"').Append(arguments[i]).Append('"').AppendLine();
             }
 
             var ddfFile = Path.GetTempFileName();
