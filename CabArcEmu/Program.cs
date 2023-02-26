@@ -26,7 +26,9 @@ namespace CabArcEmu
             var cabFile = arguments[1];
 
             // http://kiokunohokanko.blogspot.com/2015/07/windowsmakecab-cab-microsoft-makecab.html
-            var ddf = new StringBuilder($@".Set Compress=on
+            var ddf = new StringBuilder($@".OPTION EXPLICIT
+.Set Cabinet=on
+.Set Compress=on
 .Set CabinetFileCountThreshold=0
 .Set FolderFileCountThreshold=0
 .Set FolderSizeThreshold=0
@@ -35,6 +37,7 @@ namespace CabArcEmu
 .Set MaxDiskSize=0
 .Set InfFileName=NUL
 .Set RptFileName=NUL
+.Set UniqueFiles=off
 ");
             ddf.AppendLine($".Set DiskDirectoryTemplate=\"{Path.GetDirectoryName(cabFile)}\"");
             ddf.AppendLine($".Set CabinetNameTemplate=\"{Path.GetFileName(cabFile)}\"");
