@@ -1,27 +1,49 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 
 namespace CabArcEmu
 {
+    public sealed class PathStringComparer : IComparer<string>
+    {
+        public int Compare(string a, string b)
+        {
+            // https://stackoverflow.com/a/39064816
+            int r = a.Count(c => c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar)
+                  - b.Count(c => c == Path.DirectorySeparatorChar || c == Path.AltDirectorySeparatorChar);
+            if (r != 0) return r;
+
+            return string.Compare(a, b, true);
+        }
+    }
+
     internal class Program
     {
         static int Main(string[] args)
         {
-            var arguments = args;
+            var arguments = args.ToList();
+
+            var isPreserve = false;
+            if (arguments.Count > 0 && arguments[0] == "-p")
+            {
+                isPreserve = true;
+
+                arguments.RemoveAt(0);
+            }
 
             var option = SearchOption.TopDirectoryOnly;
-            if (args.Length > 0 && args[0] == "-r")
+            if (arguments.Count > 0 && arguments[0] == "-r")
             {
                 option = SearchOption.AllDirectories;
 
-                arguments = new string[args.Length - 1];
-                Array.Copy(args, 1, arguments, 0, arguments.Length);
+                arguments.RemoveAt(0);
             }
 
-            if (arguments.Length < 3 || arguments[0] != "N") return 1;
+            if (arguments.Count < 3 || arguments[0] != "N") return 1;
 
             var cabFile = arguments[1];
 
@@ -44,10 +66,10 @@ namespace CabArcEmu
 
             int start = 2, step = 1;
 
-            if (arguments.Length == 3 && arguments[2].EndsWith("\\*"))
+            if (arguments.Count == 3 && arguments[2].EndsWith("\\*"))
             {
                 // all files in folder
-                arguments = Directory.GetFiles(Path.GetDirectoryName(arguments[2]), "*", option);
+                arguments = Directory.GetFiles(Path.GetDirectoryName(arguments[2]), "*", option).ToList();
                 start = 0;
             }
             else
@@ -57,14 +79,29 @@ namespace CabArcEmu
                 if (m.Success && m.Groups.Count == 2)
                 {
                     // multi files
-                    arguments = m.Groups[1].Value.Split('"');
+                    arguments = m.Groups[1].Value.Split('"').ToList();
                     start = 1; step = 2;
                 }
             }
 
-            for (int i = start; i < arguments.Length; i += step)
+            var files = new List<string>();
+            for (int i = start; i < arguments.Count; i += step)
             {
-                ddf.Append('"').Append(arguments[i]).Append('"').AppendLine();
+                files.Add(arguments[i]);
+            }
+            files.Sort(new PathStringComparer());
+
+            var destDir = "";
+            foreach (var file in files)
+            {
+                if (isPreserve && destDir != Path.GetDirectoryName(file))
+                {
+                    destDir = Path.GetDirectoryName(file);
+                    // https://stackoverflow.com/a/39822229
+                    ddf.Append(".Set DestinationDir=\"").Append(destDir).AppendLine("\"");
+                }
+
+                ddf.Append("\"").Append(file).AppendLine("\"");
             }
 
             var ddfFile = Path.GetTempFileName();
