@@ -94,11 +94,15 @@ namespace CabArcEmu
             var destDir = "";
             foreach (var file in files)
             {
-                if (isPreserve && destDir != Path.GetDirectoryName(file))
+                if (isPreserve)
                 {
-                    destDir = Path.GetDirectoryName(file);
-                    // https://stackoverflow.com/a/39822229
-                    ddf.Append(".Set DestinationDir=\"").Append(destDir).AppendLine("\"");
+                    var _ = GetRelativePath(Environment.CurrentDirectory, file);
+                    if (destDir != _)
+                    {
+                        destDir = _;
+                        // https://stackoverflow.com/a/39822229
+                        ddf.Append(".Set DestinationDir=\"").Append(destDir).AppendLine("\"");
+                    }
                 }
 
                 ddf.Append("\"").Append(file).AppendLine("\"");
@@ -134,6 +138,16 @@ namespace CabArcEmu
             }
 
             return rc;
+        }
+
+        static string GetRelativePath(string relativeTo, string path)
+        {
+            var relativePath = Path.GetDirectoryName(path);
+            if (relativePath.StartsWith(relativeTo, StringComparison.CurrentCultureIgnoreCase))
+            {
+                relativePath = relativePath.Substring(relativeTo.Length + 1);
+            }
+            return relativePath;
         }
     }
 }
