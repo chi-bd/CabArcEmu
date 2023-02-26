@@ -29,5 +29,5 @@
 	</Target>
 </Project>
 <!-- for TEST
->msbuild CabTest.proj -Target:Cab;Cab2
+>msbuild CabTest.proj
 -->
