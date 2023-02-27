@@ -16,20 +16,20 @@
 
 	<!-- https://documentation.help/MSBuild.ExtensionPack/f7724cf2-0498-92d8-ba0f-26ca4772d8ee.htm -->
 	<Target Name="Test1">
-		<MSBuild.ExtensionPack.Compression.Cab TaskAction="Create"
-			FilesToCab="@(TXTFile)" CabFile="test1.cab" CabExePath="$(CabExePath)" />
+		<MSBuild.ExtensionPack.Compression.Cab TaskAction="Create" CabExePath="$(CabExePath)"
+			FilesToCab="@(TXTFile)" CabFile="test1.cab" />
 	</Target>
 	<Target Name="Test2">
-		<MSBuild.ExtensionPack.Compression.Cab TaskAction="Create"
-			PathToCab="Test\" CabFile="test2.cab" CabExePath="$(CabExePath)" />
+		<MSBuild.ExtensionPack.Compression.Cab TaskAction="Create" CabExePath="$(CabExePath)"
+			PathToCab="Test\" CabFile="test2.cab" />
 	</Target>
   <Target Name="Test3">
-    <MSBuild.ExtensionPack.Compression.Cab TaskAction="Create"
-			PathToCab="Test\" Recursive="true" CabFile="test3.cab" CabExePath="$(CabExePath)" />
+    <MSBuild.ExtensionPack.Compression.Cab TaskAction="Create" CabExePath="$(CabExePath)"
+			PathToCab="Test\" Recursive="true" CabFile="test3.cab" />
   </Target>
   <Target Name="Test4">
-    <MSBuild.ExtensionPack.Compression.Cab TaskAction="Create"
-			PathToCab="Test\" Recursive="true" PreservePaths="true" CabFile="test4.cab" CabExePath="$(CabExePath)" />
+    <MSBuild.ExtensionPack.Compression.Cab TaskAction="Create" CabExePath="$(CabExePath)"
+			PathToCab="Test\" Recursive="true" PreservePaths="true" CabFile="test4.cab" />
   </Target>
 </Project>
 <!-- for TEST
